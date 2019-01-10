@@ -84,4 +84,24 @@ if ($moduleVersion -le [version]"0.3.0") {
         }
         Test-PSBuildPester @pesterParams
     }
+
+    task Publish Test, {
+        assert ($PSBPreference.Publish.PSRepositoryApiKey -or $PSBPreference.Publish.PSRepositoryCredential) "API key or credential not defined to authenticate with [$($PSBPreference.Publish.PSRepository)] with."
+
+        $publishParams = @{
+            Path       = $PSBPreference.Build.ModuleOutDir
+            Version    = $PSBPreference.General.ModuleVersion
+            Repository = $PSBPreference.Publish.PSRepository
+            Verbose    = $VerbosePreference
+        }
+        if ($PSBPreference.Publish.PSRepositoryApiKey) {
+            $publishParams.ApiKey = $PSBPreference.Publish.PSRepositoryApiKey
+        }
+        else {
+            $publishParams.Credential = $PSBPreference.Publish.PSRepositoryCredential
+        }
+
+        Publish-PSBuildModule @publishParams
+    }
+
 }
