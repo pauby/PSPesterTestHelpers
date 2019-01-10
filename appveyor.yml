@@ -1,0 +1,71 @@
+# Appveyor Options http://www.appveyor.com/docs/appveyor-yml
+# Appveyor Environment Variables https://www.appveyor.com/docs/environment-variables/
+version: 0.1.0.{build}
+
+os: WMF 5
+max_jobs: 1
+
+#branches:
+#  only:
+#  - master
+#  - dev
+
+skip_non_tags: false
+
+build: false # disable MSBuild
+
+environment:
+  PSGALLERY_API_KEY:
+#    secure: TO/Slq79myoBRfUTivNSeTkCJAvK5RPE2K52pjR9djE=
+    secure: TO/Slq79myoBRfUTivNSeScz0nRWFlFp0JMiImdmHVZLsSa349qCi98nm29e6uGC
+
+  GITHUB_API_KEY:
+    secure: jmTiAdpCVvSrW0a0kDpC+ucDk4WSnSiNJhpVbsE+FKx1ZwzB189RUmFvnbgkBGBw
+
+  GITHUB_USERNAME:
+    secure: WbMc18DNWPRELk0QTnab0Q==
+
+  appveyor_rdp_password:
+    secure: CC+F6/yXM5KgZMVnjjHyBIaw8aK8oOCYipXqGfQUHEE=
+
+  NOTIFY_EMAIL:
+    secure: xxzrryH1TErXFSjxmYszGA==
+
+init:
+  - ps: |
+#    iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+    git config --global core.autocrlf input
+
+install:
+  - git --version
+  - choco --version
+
+  - ps: |
+      git config --global credential.helper store
+      Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_API_KEY):x-oauth-basic@github.com`n"
+
+build_script:
+  - ps: |
+      .\build.ps1 -Task build
+
+test_script:
+  - ps: |
+      .\build.ps1 -Task test
+
+deploy_script:
+  - ps: |
+      if ($env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_COMMIT_MESSAGE -match "[!release]") {
+        .\build.ps1 -Task deploy
+      }
+
+on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+notifications:
+  - provider: Email
+    to: ${NOTIFY_EMAIL}
+    subject: 'Build {{status}}'                  # optional
+    message: "{{message}}, {{commitId}}, ..."    # optional
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
