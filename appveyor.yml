@@ -63,7 +63,7 @@ on_finish:
 
 notifications:
   - provider: Email
-    to: ${NOTIFY_EMAIL}
+    to: appveyor.5.pauby@spamgourmet.com
     subject: 'Build {{status}}'                  # optional
     message: "{{message}}, {{commitId}}, ..."    # optional
     on_build_success: true
