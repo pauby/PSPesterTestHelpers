@@ -71,4 +71,17 @@ if ($moduleVersion -le [version]"0.3.0") {
                 '{0,-20}{1}' -f $_.name, $_.value
             })
     } # task
+
+    task Pester -If ( $pesterPreReqs -eq $true ), Build, {
+        $pesterParams = @{
+            Path                  = $PSBPreference.Test.RootDir
+            ModuleName            = $PSBPreference.General.ModuleName
+            OutputPath            = $PSBPreference.Test.OutputFile
+            OutputFormat          = $PSBPreference.Test.OutputFormat
+            CodeCoverage          = $PSBPreference.Test.CodeCoverage.Enabled
+            CodeCoverageThreshold = $PSBPreference.Test.CodeCoverage.Threshold
+            CodeCoverageFiles     = $PSBPreference.Test.CodeCoverage.Files
+        }
+        Test-PSBuildPester @pesterParams
+    }
 }
