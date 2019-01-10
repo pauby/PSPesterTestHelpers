@@ -32,7 +32,7 @@ $dependChocoPackage = @(
     }
 )
 
-#startregion functions
+#region functions
 function Install-BuildModule {
     [CmdletBinding()]
     Param (
@@ -74,7 +74,7 @@ function Install-BuildChocolateyPackage {
 
     # Check if Chocolatey is installed
     Write-Verbose 'Checking if Chocolatey is installed'
-    if (-not (Get-Command -Command 'choco.exe' -ErrorAction SilentlyContinue)) {
+    if (-not (Get-Command -Name 'choco.exe' -ErrorAction SilentlyContinue)) {
         try {
             Write-Verbose 'Chocolatey not installed. Installing.'
             # taken from https://chocolatey.org/install
@@ -89,7 +89,7 @@ function Install-BuildChocolateyPackage {
     # if we get here either Chocolatey is installed
     $Package | ForEach-Object {
         Write-Verbose "Checking for '$($_.CheckCommand)'."
-        if (-not (Get-Command -Command $_.CheckCommand -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command -Name $_.CheckCommand -ErrorAction SilentlyContinue)) {
             Write-Verbose "'$($_.CheckCommand)' not found. Installing '$($_.Name)' package."
             choco install $_.Name -y
         }
@@ -107,7 +107,7 @@ function Test-Administrator {
     $user = [Security.Principal.WindowsIdentity]::GetCurrent();
     (New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-#endregion functions
+#endregion
 
 if (Test-Administrator) {
     Install-BuildModule -Module $dependModules
