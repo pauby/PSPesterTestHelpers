@@ -111,7 +111,7 @@ function Test-Administrator {
 
 if (Test-Administrator) {
     Install-BuildModule -Module $dependModules
-    Install-BuildChocoPackage -Package $dependChocoPackage
+    Install-BuildChocolateyPackage -Package $dependChocoPackage
 }
 else {
     Write-Warning "Not running as Administrator - could not initialize build environment."
