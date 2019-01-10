@@ -31,7 +31,7 @@ task Clean Init, {
 }
 
 task CreateGitHubRelease {
-    Set-GitHubSessionInformation -User $env:GITHUB_USERNAME -ApiKey $env:GITHHUB_API_KEY
+    Set-GitHubSessionInformation -User $env:GITHUB_USERNAME -ApiKey $env:GITHUB_API_KEY
 
     # Create the artifact
     $artifactPath = Join-Path -Path $env:TEMP -ChildPath "{0}-{1}.zip" -f $PSBPreference.General.ModuleName, $PSBPreference.General.ModuleVersion
@@ -40,11 +40,11 @@ task CreateGitHubRelease {
 
     $params = @{
         Repository  = $PSBPreference.General.ModuleName
-        Name        = $PSBPreference.General.ModuleName
-        Description = "v$($PSBPreference.General.ModuleVersion) Release"
+        Name        = "$($PSBPreference.General.ModuleName) v$($PSBPreference.General.ModuleVersion)"
+        #Description = "v$($PSBPreference.General.ModuleVersion) Release"
         Target      = 'master'
         Tag         = "v$($PSBPreference.General.ModuleVersion)"
-        Assets      = @{
+        Asset      = @{
             "Path"         = $artifactPath
             "Content-Type" = "application/zip"
         }
