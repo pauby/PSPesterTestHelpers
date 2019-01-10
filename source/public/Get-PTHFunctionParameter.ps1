@@ -36,9 +36,7 @@ function Get-PTHFunctionParameter {
         # parameters returned.
         [AllowEmptyCollection()]
         [string[]]
-        $Exclude = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction',
-                'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable',
-                'OutVariable', 'OutBuffer', 'PipelineVariable')
+        $Exclude = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable')
     )
 
     if (-not $PSBoundParameters.ContainsKey('Verbose')) {
