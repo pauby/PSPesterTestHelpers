@@ -23,6 +23,10 @@ $dependModules = @(
         Name           = 'PSScriptAnalyzer'
         MinimumVersion = '1.17.1'
     }
+    @{
+        Name           = 'GitHubReleaseManager'
+        MinimumVersion = '1.2.0'
+    }
 )
 
 $dependChocoPackage = @(
