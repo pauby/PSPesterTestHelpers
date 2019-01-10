@@ -5,12 +5,13 @@ version: 0.1.0.{build}
 os: WMF 5
 max_jobs: 1
 
-#branches:
-#  only:
-#  - master
-#  - dev
-
-skip_non_tags: false
+branches:
+  only:
+    - dev
+    - master
+    - /release/.*/
+    - /hotfix/.*/
+    - /feature/.*/
 
 build: false # disable MSBuild
 
