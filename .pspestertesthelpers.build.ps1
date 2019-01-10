@@ -22,6 +22,13 @@ task LocalDeploy {
     Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
 }
 
+task Clean Init, {
+    Clear-PSBuildOutputFolder -Path $PSBPreference.Build.ModuleOutDir
+
+    # Remove docs folder
+    Remove-Item -Path $PSBPreference.Docs.RootDir -Recurse -Force -ErrorAction SilentlyContinue
+}
+
 task CreateGitHubRelease {
     Set-GitHubSessionInformation -User $env:GITHUB_USERNAME -ApiKey $env:GITHHUB_API_KEY
 
