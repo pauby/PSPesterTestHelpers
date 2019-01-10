@@ -72,7 +72,7 @@ if ($moduleVersion -le [version]"0.3.0") {
             })
     } # task
 
-    task Pester -If ( $pesterPreReqs -eq $true ), Build, {
+    task Pester -If { (& $pesterPreReqs) -eq $true } Build, {
         $pesterParams = @{
             Path                  = $PSBPreference.Test.RootDir
             ModuleName            = $PSBPreference.General.ModuleName
