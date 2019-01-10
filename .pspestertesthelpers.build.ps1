@@ -34,7 +34,7 @@ task CreateGitHubRelease {
     Set-GitHubSessionInformation -User $env:GITHUB_USERNAME -ApiKey $env:GITHUB_API_KEY
 
     # Create the artifact
-    $artifactPath = Join-Path -Path $env:TEMP -ChildPath "{0}-{1}.zip" -f $PSBPreference.General.ModuleName, $PSBPreference.General.ModuleVersion
+    $artifactPath = Join-Path -Path $env:TEMP -ChildPath ("{0}-{1}.zip" -f $PSBPreference.General.ModuleName, $PSBPreference.General.ModuleVersion)
     $modulePath = Join-Path -Path $PSBPreference.Build.ModuleOutDir -ChildPath "*"
     Compress-Archive -Path $PSBPreference.Build.ModuleOutDir -DestinationPath $artifactPath
 
