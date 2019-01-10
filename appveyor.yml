@@ -17,8 +17,7 @@ build: false # disable MSBuild
 
 environment:
   PSGALLERY_API_KEY:
-    secure: TO/Slq79myoBRfUTivNSeTkCJAvK5RPE2K52pjR9djE=
-#    secure: TO/Slq79myoBRfUTivNSeScz0nRWFlFp0JMiImdmHVZLsSa349qCi98nm29e6uGC
+    secure: TO/Slq79myoBRfUTivNSeScz0nRWFlFp0JMiImdmHVZLsSa349qCi98nm29e6uGC
 
   GITHUB_API_KEY:
     secure: jmTiAdpCVvSrW0a0kDpC+ucDk4WSnSiNJhpVbsE+FKx1ZwzB189RUmFvnbgkBGBw
@@ -55,8 +54,7 @@ test_script:
 
 deploy_script:
   - ps: |
-      #if ($env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_COMMIT_MESSAGE -match "[!release]") {
-      if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -match "[!release]") {
+      if ($env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_COMMIT_MESSAGE -match "[!release]") {
         .\build.ps1 -Task deploy
       }
 
