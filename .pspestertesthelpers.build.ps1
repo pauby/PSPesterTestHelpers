@@ -3,14 +3,15 @@ Import-Module PowerShellBuild -force
 
 $PSBPreference.Build.CompileModule = $true
 # $PSBPreference.Build.Dependencies                           = 'StageFiles', 'BuildHelp'
-$PSBPreference.Test.Enabled                                 = $true
-$PSBPreference.Test.CodeCoverage.Enabled                    = $true
-$PSBPreference.Test.CodeCoverage.Threshold                  = 0.1
-$PSBPreference.Test.CodeCoverage.Files                      =
-    (Join-Path -Path $PSBPreference.Build.ModuleOutDir -ChildPath "*.psm1")
-$PSBPreference.Test.ScriptAnalysis.Enabled                  = $true
+$PSBPreference.Test.Enabled = $false
+$PSBPreference.Test.CodeCoverage.Enabled = $false
+$PSBPreference.Test.CodeCoverage.Threshold = 0.1
+$PSBPreference.Test.CodeCoverage.Files =
+(Join-Path -Path $PSBPreference.Build.ModuleOutDir -ChildPath "*.psm1")
+$PSBPreference.Test.ScriptAnalysis.Enabled = $true
 $PSBPreference.Test.ScriptAnalysis.FailBuildOnSeverityLevel = 'Error'
 
+#region Build Tasks
 task LocalDeploy {
     $sourcePath = $PSBPreference.Build.ModuleOutDir
     $destPath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) `
@@ -38,13 +39,13 @@ task CreateGitHubRelease {
     Compress-Archive -Path $PSBPreference.Build.ModuleOutDir -DestinationPath $artifactPath
 
     $params = @{
-        Repository = $PSBPreference.General.ModuleName
-        Name = $PSBPreference.General.ModuleName
+        Repository  = $PSBPreference.General.ModuleName
+        Name        = $PSBPreference.General.ModuleName
         Description = "v$($PSBPreference.General.ModuleVersion) Release"
-        Target = 'master'
-        Tag = "v$($PSBPreference.General.ModuleVersion)"
-        Assets = @{
-            "Path" = $artifactPath
+        Target      = 'master'
+        Tag         = "v$($PSBPreference.General.ModuleVersion)"
+        Assets      = @{
+            "Path"         = $artifactPath
             "Content-Type" = "application/zip"
         }
     }
@@ -52,6 +53,8 @@ task CreateGitHubRelease {
 }
 
 task deploy Publish, CreateGitHubRelease, { }
+
+#endregion
 
 # Only needed to workaround PowerShellBuild issues
 $moduleVersion = (Get-Module -Name PowerShellBuild -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version
@@ -64,8 +67,8 @@ if ($moduleVersion -le [version]"0.3.0") {
         Set-BuildEnvironment -BuildOutput $PSBPreference.Build.ModuleOutDir -Force
         $nl = [System.Environment]::NewLine
         "$nl`Environment variables:"
-        (Get-Item ENV:BH*).Foreach({
-            '{0,-20}{1}' -f $_.name, $_.value
-        })
+        (Get-Item ENV:BH*).Foreach( {
+                '{0,-20}{1}' -f $_.name, $_.value
+            })
     } # task
 }
