@@ -28,7 +28,7 @@ function Assert-PTHMandatoryParameter {
 
     # this will find a functions mandatory parameters that are not in the $ParameterName array.
     # if anything is found then it means the mandatory parameters we're testing for are different.
-    $unknownParameters = Get-PHFunctionParameter -Name $FunctionName | Where-Object {
+    $unknownParameters = Get-PTHFunctionParameter -Name $FunctionName | Where-Object {
         $_.Value.Attributes.Mandatory -eq $true -and $ParameterName -notcontains $_.Key
     }
 
